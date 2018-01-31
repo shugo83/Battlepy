@@ -108,64 +108,64 @@ for i in range(len(boatlengths)):
             except (ValueError, TypeError):
                  stat=True
                  print('coordinates must be integers')
-        if o==0:
-            if int(boatlengths[i])==5:
-                if x+2<=9 and x-2>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x+2,y]==0 and myboard[x-1,y]==0 and myboard[x-2,y]==0:
+            if o==0:
+                if int(boatlengths[i])==5:
+                    if x+2<=9 and x-2>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x+2,y]==0 and myboard[x-1,y]==0 and myboard[x-2,y]==0:
+                        myboard[x,y]=1
+                        myboard[x+1,y]=1
+                        myboard[x+2,y]=1
+                        myboard[x-1,y]=1
+                        myboard[x-2,y]=1
+                        stat=False
+                    else:
+                        print('collision, try again')
+                        continue
+                elif int(boatlengths[i])==3:
+                    if x+1<=9 and x-1>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x-1,y]==0:
+                        myboard[x,y]=1
+                        myboard[x+1,y]=1
+                        myboard[x-1,y]=1
+                        stat=False
+                    else:
+                        print('collision, try again')
+                        continue
+                elif int(boatlengths[i])==1 and myboard[x,y]==0:
                     myboard[x,y]=1
-                    myboard[x+1,y]=1
-                    myboard[x+2,y]=1
-                    myboard[x-1,y]=1
-                    myboard[x-2,y]=1
                     stat=False
                 else:
                     print('collision, try again')
                     continue
-            elif int(boatlengths[i])==3:
-                if x+1<=9 and x-1>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x-1,y]==0:
+            if o==1:
+                if int(boatlengths[i])==5:
+                    if y+2<=9 and y-2>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y+2]==0 and myboard[x,y-1]==0 and myboard[x,y-2]==0:
+                        myboard[x,y+1]=1
+                        myboard[x,y+2]=1
+                        myboard[x,y-1]=1
+                        myboard[x,y-2]=1
+                        myboard[x,y]=1
+                        stat=False
+                    else:
+                        print('collision, try again')
+                        continue
+                elif int(boatlengths[i])==3:
+                    if y+1<=9 and y-1>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y-1]==0:
+                        myboard[x,y]=1
+                        myboard[x,y+1]=1
+                        myboard[x,y-1]=1
+                        stat=False
+                    else:
+                        print('collision, try again')
+                        continue
+                elif int(boatlengths[i])==1 and myboard[x,y]==0:
                     myboard[x,y]=1
-                    myboard[x+1,y]=1
-                    myboard[x-1,y]=1
                     stat=False
                 else:
                     print('collision, try again')
                     continue
-            elif int(boatlengths[i])==1 and myboard[x,y]==0:
-                myboard[x,y]=1
-                stat=False
+            if stat==False:
+                print('Placed')
             else:
-                print('collision, try again')
-                continue
-        if o==1:
-            if int(boatlengths[i])==5:
-                if y+2<=9 and y-2>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y+2]==0 and myboard[x,y-1]==0 and myboard[x,y-2]==0:
-                    myboard[x,y+1]=1
-                    myboard[x,y+2]=1
-                    myboard[x,y-1]=1
-                    myboard[x,y-2]=1
-                    myboard[x,y]=1
-                    stat=False
-                else:
-                    print('collision, try again')
-                    continue
-            elif int(boatlengths[i])==3:
-                if y+1<=9 and y-1>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y-1]==0:
-                    myboard[x,y]=1
-                    myboard[x,y+1]=1
-                    myboard[x,y-1]=1
-                    stat=False
-                else:
-                    print('collision, try again')
-                    continue
-            elif int(boatlengths[i])==1 and myboard[x,y]==0:
-                myboard[x,y]=1
-                stat=False
-            else:
-                print('collision, try again')
-                continue
-        if stat==False:
-            print('Placed')
-        else:
-            print('Fail')
+                print('Fail')
 print('Here are your ships...')
 print('     0 1 2 3 4 5 6 7 8 9')
 print('    ---------------------')
