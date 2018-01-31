@@ -58,9 +58,9 @@ for i in range(len(boatlengths)):
                 board[x,y]=1
                 status=False
         if status==False:
-            print('placed')
+            print('Placed')
         else:
-            print('fail')
+            print('Fail')
 print('Complete')
 #user input of ships
 for i in range(len(boatlengths)):
@@ -116,7 +116,7 @@ for i in range(len(boatlengths)):
                     myboard[x+2,y]=1
                     myboard[x-1,y]=1
                     myboard[x-2,y]=1
-                    status=False
+                    stat=False
                 else:
                     print('collision, try again')
                     continue
@@ -125,13 +125,13 @@ for i in range(len(boatlengths)):
                     myboard[x,y]=1
                     myboard[x+1,y]=1
                     myboard[x-1,y]=1
-                    status=False
+                    stat=False
                 else:
                     print('collision, try again')
                     continue
             elif int(boatlengths[i])==1 and myboard[x,y]==0:
                 myboard[x,y]=1
-                status=False
+                stat=False
             else:
                 print('collision, try again')
                 continue
@@ -143,7 +143,7 @@ for i in range(len(boatlengths)):
                     myboard[x,y-1]=1
                     myboard[x,y-2]=1
                     myboard[x,y]=1
-                    status=False
+                    stat=False
                 else:
                     print('collision, try again')
                     continue
@@ -152,21 +152,25 @@ for i in range(len(boatlengths)):
                     myboard[x,y]=1
                     myboard[x,y+1]=1
                     myboard[x,y-1]=1
-                    status=False
+                    stat=False
                 else:
                     print('collision, try again')
                     continue
             elif int(boatlengths[i])==1 and myboard[x,y]==0:
                 myboard[x,y]=1
-                status=False
+                stat=False
             else:
                 print('collision, try again')
                 continue
-        if status==False:
-            print('placed')
+        if stat==False:
+            print('Placed')
         else:
-            print('fail')
-
+            print('Fail')
+print('Here are your ships...')
+print('     0 1 2 3 4 5 6 7 8 9')
+print('    ---------------------')
+for k in range(10):
+        print(k,'|', myboard[k])
 #ask user for guess
 print('Welcome, enter coodinates for shots in the format y,x')
 time.sleep(2)
