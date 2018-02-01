@@ -5,7 +5,9 @@ import time
 #create board
 board=np.zeros([10,10],int)
 myboard=np.zeros([10,10],int)
+compguess=np.zeros([10,10],int)
 shots=np.zeros([10,10],int)
+
 #random positions of boats
 boatlengths=[5,3,3,1,1]
 newboats=np.zeros([10,10],int)
@@ -64,6 +66,8 @@ for i in range(len(boatlengths)):
 print('Complete')
 #user input of ships
 for i in range(len(boatlengths)):
+    k=i+1
+    print('Boat number',k , 'with length = ', boatlengths[i])
     print('     0 1 2 3 4 5 6 7 8 9')
     print('    ---------------------')
     for j in range(10):
@@ -83,9 +87,9 @@ for i in range(len(boatlengths)):
                      status=False
                  else:
                      print('coordinates must be 0-9')
-                     continue
+#                     continue
              except (ValueError, TypeError):
-                 status=True
+#                 status=True
                  print('coordinates must be integers')
                  continue
         else:
@@ -95,18 +99,16 @@ for i in range(len(boatlengths)):
 #        coordinates to try
 #        print(x,y)
 #     create orientation
-    stat=True
-    while stat:
         o=input('enter orientation, 0 for vertical, 1 for horizontal: ')
         try:
             float(o)
             o=int(o)
             if o==0 or o==1:
-                stat=False
+                status=False
             else:
                     print('coordinates must be 0-9')
         except (ValueError, TypeError):
-            stat=True
+            status=True
             print('coordinates must be integers')
         if o==0:
             if int(boatlengths[i])==5:
@@ -116,7 +118,7 @@ for i in range(len(boatlengths)):
                     myboard[x+2,y]=1
                     myboard[x-1,y]=1
                     myboard[x-2,y]=1
-                    stat=False
+                    status=False
                 else:
                     print('collision, try again')
                     continue
@@ -125,13 +127,13 @@ for i in range(len(boatlengths)):
                     myboard[x,y]=1
                     myboard[x+1,y]=1
                     myboard[x-1,y]=1
-                    stat=False
+                    status=False
                 else:
                     print('collision, try again')
                     continue
             elif int(boatlengths[i])==1 and myboard[x,y]==0:
                 myboard[x,y]=1
-                stat=False
+                status=False
             else:
                 print('collision, try again')
                 continue
@@ -143,7 +145,7 @@ for i in range(len(boatlengths)):
                     myboard[x,y-1]=1
                     myboard[x,y-2]=1
                     myboard[x,y]=1
-                    stat=False
+                    status=False
                 else:
                     print('collision, try again')
                     continue
@@ -152,17 +154,17 @@ for i in range(len(boatlengths)):
                     myboard[x,y]=1
                     myboard[x,y+1]=1
                     myboard[x,y-1]=1
-                    stat=False
+                    status=False
                 else:
                     print('collision, try again')
                     continue
             elif int(boatlengths[i])==1 and myboard[x,y]==0:
                 myboard[x,y]=1
-                stat=False
+                status=False
             else:
                 print('collision, try again')
                 continue
-        if stat==False:
+        if status==False:
             print('Placed')
         else:
             print('Fail')
@@ -193,7 +195,6 @@ while gamestate:
                  else:
                      print('coordinates must be 0-9')
              except (ValueError, TypeError):
-                 co=True
                  print('coordinates must be integers')
         else:
             print('enter coordinates in the format y,x')
@@ -215,16 +216,70 @@ while gamestate:
     else:
         remaining=int(np.sum(board))
         print('Ships remaining =', remaining)
-
-
-
-
-
-
-
-
-    print('done')
-    gamestate=False
+#    computer guess logic
+        goodguesslist=[]
+        badguesslist=[]
+        canguesslist=[]
+    for x in range(10):
+        for y in range(10):
+            if compguess[x,y]==2:
+                goodguesslist.append([x,y])
+            elif compguess[x,y]==1:
+                badguesslist.append([x,y])
+            elif compguess[x,y]==0:
+                canguesslist.append([x,y])
+    if len(goodguesslist)==0:
+        xg,yg=randint(0,9),randint(0,9)
+    else:
+        guessing=True
+        count=-1
+        while guessing:
+            count=count+1 ###this fails sometimes without try below
+            try:
+                xi,yi=goodguesslist[count][0],goodguesslist[count][1]
+            except IndexError:
+                xi,yi=canguesslist[count][0],canguesslist[count][1]
+            newg=xi+1
+            trial=[newg,yi]
+            if trial in canguesslist:
+                print('thinking...')
+                xg,yg=newg,yi
+                guessing=False
+                continue
+            ###exists on can guess list guessing =false
+            newg=xi-1
+            trial=[newg,yi]
+            if trial in canguesslist:
+                print('thinking...')
+                xg,yg=newg,yi
+                guessing=False
+                continue
+            newg=yi+1
+            trial=[xi,newg]
+            if trial in canguesslist:
+                print('thinking...')
+                xg,yg=xi,newg
+                guessing=False
+                continue
+            newg=yi-1
+            trial=[xi,newg]
+            if trial in canguesslist:
+                print('thinking...')
+                xg,yg=xi,newg
+                guessing=False
+                continue
+            #check to see if locations around xi,yi are on the good guess list, if they are then guessing=false and carry on.
+    print('Computer guess...', xg,yg)
+    if myboard[xg,yg]==1:
+        print('Your ship was hit')
+        compguess[xg,yg]=2
+    else:
+        print('Your ships are safe')
+        compguess[xg,yg]=1
+    myremaining=int(np.sum(myboard))
+    print('You have ',myremaining, ' ships remaining')
+#    print('done')
+#    gamestate=False
 
 #    if board[x,y]==0:
 #        board[x,y]=1
