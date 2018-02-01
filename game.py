@@ -2,6 +2,7 @@
 import numpy as np
 from random import randint
 import time
+import sys
 #create board
 board=np.zeros([10,10],int)
 myboard=np.zeros([10,10],int)
@@ -11,6 +12,9 @@ shots=np.zeros([10,10],int)
 #random positions of boats
 boatlengths=[5,3,3,1,1]
 newboats=np.zeros([10,10],int)
+print('At any point during the game, type \'end\' to quit')
+print('0 indicates an empty location, 1 indicates a ship')
+time.sleep(2)
 print('Computer placing ships')
 for i in range(len(boatlengths)):
     status=True
@@ -21,7 +25,6 @@ for i in range(len(boatlengths)):
         newboats[x,y]=1
 #     create orientation
         o=randint(0,1)
-#        print(o)
 #        test if location is free and if so place object
         if o==0:
             if int(boatlengths[i])==5:
@@ -75,6 +78,8 @@ for i in range(len(boatlengths)):
     status=True
     while status:
         g=input('enter your position: ')
+        if g=='end':
+            sys.exit()
         g=g.split(',')
         if len(g)==2:
              gx=g[0]
@@ -100,6 +105,8 @@ for i in range(len(boatlengths)):
 #        print(x,y)
 #     create orientation
         o=input('enter orientation, 0 for vertical, 1 for horizontal: ')
+        if g=='end':
+            sys.exit()
         try:
             float(o)
             o=int(o)
@@ -175,6 +182,7 @@ for k in range(10):
         print(k,'|', myboard[k])
 #ask user for guess
 print('Welcome, enter coodinates for shots in the format y,x')
+print('hits are shown by 2, and misses by 1')
 time.sleep(2)
 print('enter your first guess')
 gamestate=True
@@ -182,6 +190,8 @@ while gamestate:
     co=True
     while co:
         g=input('enter your guess: ')
+        if g=='end':
+            sys.exit()
         g=g.split(',')
         if len(g)==2:
              gx=g[0]
@@ -238,7 +248,7 @@ while gamestate:
             try:
                 xi,yi=goodguesslist[count][0],goodguesslist[count][1]
             except IndexError:
-                xi,yi=canguesslist[count][0],canguesslist[count][1]
+                xi,yi=canguesslist[randint(len(canguesslist))][0],canguesslist[randint(len(canguesslist))][1]
             newg=xi+1
             trial=[newg,yi]
             if trial in canguesslist:
