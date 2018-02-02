@@ -89,12 +89,10 @@ for i in range(len(boatlengths)):
                  gx=int(gx)
                  gy=int(gy)
                  if gx>=0 and gx<=9 and gy>=0 and gy<=9:
-                     status=False
+                     print(' ')
                  else:
                      print('coordinates must be 0-9')
-#                     continue
              except (ValueError, TypeError):
-#                 status=True
                  print('coordinates must be integers')
                  continue
         else:
@@ -111,12 +109,11 @@ for i in range(len(boatlengths)):
             float(o)
             o=int(o)
             if o==0 or o==1:
-                status=False
+                print(' ')
             else:
-                    print('coordinates must be 0-9')
+                    print('orientation must be 0-1')
         except (ValueError, TypeError):
-            status=True
-            print('coordinates must be integers')
+            print('orientation must be an integer')
         if o==0:
             if int(boatlengths[i])==5:
                 if x+2<=9 and x-2>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x+2,y]==0 and myboard[x-1,y]==0 and myboard[x-2,y]==0:
@@ -128,7 +125,7 @@ for i in range(len(boatlengths)):
                     status=False
                 else:
                     print('collision, try again')
-                    continue
+                    status=True
             elif int(boatlengths[i])==3:
                 if x+1<=9 and x-1>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x-1,y]==0:
                     myboard[x,y]=1
@@ -137,13 +134,11 @@ for i in range(len(boatlengths)):
                     status=False
                 else:
                     print('collision, try again')
-                    continue
             elif int(boatlengths[i])==1 and myboard[x,y]==0:
                 myboard[x,y]=1
                 status=False
             else:
                 print('collision, try again')
-                continue
         if o==1:
             if int(boatlengths[i])==5:
                 if y+2<=9 and y-2>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y+2]==0 and myboard[x,y-1]==0 and myboard[x,y-2]==0:
@@ -155,7 +150,6 @@ for i in range(len(boatlengths)):
                     status=False
                 else:
                     print('collision, try again')
-                    continue
             elif int(boatlengths[i])==3:
                 if y+1<=9 and y-1>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y-1]==0:
                     myboard[x,y]=1
@@ -164,17 +158,13 @@ for i in range(len(boatlengths)):
                     status=False
                 else:
                     print('collision, try again')
-                    continue
             elif int(boatlengths[i])==1 and myboard[x,y]==0:
                 myboard[x,y]=1
                 status=False
             else:
                 print('collision, try again')
-                continue
         if status==False:
             print('Placed')
-        else:
-            print('Fail')
 print('Here are your ships...')
 print('     0 1 2 3 4 5 6 7 8 9')
 print('    ---------------------')
@@ -225,7 +215,7 @@ while gamestate:
 
     else:
         remaining=int(np.sum(board))
-        print('Ships remaining =', remaining)
+        print('Enemy ships remaining =', remaining)
 #    computer guess logic
         goodguesslist=[]
         badguesslist=[]
@@ -279,20 +269,15 @@ while gamestate:
                 guessing=False
                 continue
             #check to see if locations around xi,yi are on the good guess list, if they are then guessing=false and carry on.
-    print('Computer guess...', xg,yg)
+    print('Computer guess...', xg,',',yg)
     if myboard[xg,yg]==1:
         print('Your ship was hit')
+        myboard[xg,yg]=0
         compguess[xg,yg]=2
     else:
         print('Your ships are safe')
         compguess[xg,yg]=1
     myremaining=int(np.sum(myboard))
     print('You have ',myremaining, ' ships remaining')
-#    print('done')
-#    gamestate=False
-
-#    if board[x,y]==0:
-#        board[x,y]=1
-
-
-#check for hit and report
+    if myremaining==0 or remaining==0:
+        gamestate=False
