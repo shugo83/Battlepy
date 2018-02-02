@@ -10,7 +10,7 @@ compguess=np.zeros([10,10],int)
 shots=np.zeros([10,10],int)
 
 #random positions of boats
-boatlengths=[5,3,3,1,1]
+boatlengths=[5,5,3,3,1]
 newboats=np.zeros([10,10],int)
 print('At any point during the game, type \'end\' to quit')
 print('0 indicates an empty location, 1 indicates a ship')
@@ -209,17 +209,12 @@ while gamestate:
     print('    ---------------------')
     for i in range(10):
         print(i,'|', shots[i])
-    if np.sum(board)==0:
-        print('GAME OVER')
-        gamestate=False
-
-    else:
-        remaining=int(np.sum(board))
-        print('Enemy ships remaining =', remaining)
+    remaining=int(np.sum(board))
+    print('Enemy ships remaining =', remaining)
 #    computer guess logic
-        goodguesslist=[]
-        badguesslist=[]
-        canguesslist=[]
+    goodguesslist=[]
+    badguesslist=[]
+    canguesslist=[]
     for x in range(10):
         for y in range(10):
             if compguess[x,y]==2:
@@ -238,7 +233,8 @@ while gamestate:
             try:
                 xi,yi=goodguesslist[count][0],goodguesslist[count][1]
             except IndexError:
-                xi,yi=canguesslist[randint(len(canguesslist))][0],canguesslist[randint(len(canguesslist))][1]
+                zz=randint(0,(len(canguesslist)-1))
+                xi,yi=canguesslist[zz][0],canguesslist[zz][1]
             newg=xi+1
             trial=[newg,yi]
             if trial in canguesslist:
@@ -280,4 +276,8 @@ while gamestate:
     myremaining=int(np.sum(myboard))
     print('You have ',myremaining, ' ships remaining')
     if myremaining==0 or remaining==0:
+        if myremaining==0:
+            print('You lose')
+        elif remaining==0:
+            print('You win')
         gamestate=False
