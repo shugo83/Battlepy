@@ -11,6 +11,7 @@ shots=np.zeros([10,10],int)
 
 #random positions of boats
 boatlengths=[5,5,3,3,1]
+#boatlengths=[1]
 newboats=np.zeros([10,10],int)
 print('At any point during the game, type \'end\' to quit')
 print('0 indicates an empty location, 1 indicates a ship')
@@ -224,7 +225,18 @@ while gamestate:
             elif compguess[x,y]==0:
                 canguesslist.append([x,y])
     if len(goodguesslist)==0:
-        xg,yg=randint(0,9),randint(0,9)
+        initial=True
+        while initial:
+            xg,yg=randint(0,9),randint(0,9)
+            tes=[xg+1,yg]
+            if tes not in badguesslist:
+                tes=[xg-1,yg]
+                if tes not in badguesslist:
+                    tes=[xg,yg+1]
+                    if tes not in badguesslist:
+                        tes=[xg,yg-1]
+                        if tes not in badguesslist:
+                            initial=False
     else:
         guessing=True
         count=-1
