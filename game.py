@@ -3,14 +3,20 @@ import numpy as np
 from random import randint
 import time
 import sys
+from numpy import unravel_index
 #create board
 board=np.zeros([10,10],int)
 myboard=np.zeros([10,10],int)
 compguess=np.zeros([10,10],int)
 shots=np.zeros([10,10],int)
+#paritypdf=np.zeros([10,10],int)
+#pdfboard=np.zeros([10,10],int)
+#pdboard=np.zeros([10,10],int)
+n = 10
+xa=np.array([[(i+j)%2 for i in range(n)] for j in range(n)])
 
 #random positions of boats
-boatlengths=[5,5,3,3,1]
+boatlengths=[5,4,3,3,2]
 #boatlengths=[1]
 newboats=np.zeros([10,10],int)
 print('At any point during the game, type \'end\' to quit')
@@ -36,15 +42,24 @@ for i in range(len(boatlengths)):
                     board[x-1,y]=1
                     board[x-2,y]=1
                     status=False
+            if int(boatlengths[i])==4:
+                if x+2<=9 and x-1>=0 and board[x,y]==0 and board[x+1,y]==0 and board[x+2,y]==0 and board[x-1,y]==0:
+                    board[x,y]=1
+                    board[x+1,y]=1
+                    board[x+2,y]=1
+                    board[x-1,y]=1
+                    status=False
             elif int(boatlengths[i])==3:
                 if x+1<=9 and x-1>=0 and board[x,y]==0 and board[x+1,y]==0 and board[x-1,y]==0:
                     board[x,y]=1
                     board[x+1,y]=1
                     board[x-1,y]=1
                     status=False
-            elif int(boatlengths[i])==1 and board[x,y]==0:
-                board[x,y]=1
-                status=False
+            elif int(boatlengths[i])==2:
+                if x+1<=9 and x>=0 and board[x,y]==0 and board[x+1,y]==0:
+                    board[x,y]=1
+                    board[x+1,y]=1
+                    status=False
         if o==1:
             if int(boatlengths[i])==5:
                 if y+2<=9 and y-2>=0 and board[x,y]==0 and board[x,y+1]==0 and board[x,y+2]==0 and board[x,y-1]==0 and board[x,y-2]==0:
@@ -54,15 +69,24 @@ for i in range(len(boatlengths)):
                     board[x,y-2]=1
                     board[x,y]=1
                     status=False
+            if int(boatlengths[i])==4:
+                if y+2<=9 and y-1>=0 and board[x,y]==0 and board[x,y+1]==0 and board[x,y+2]==0 and board[x,y-1]==0:
+                    board[x,y+1]=1
+                    board[x,y+2]=1
+                    board[x,y-1]=1
+                    board[x,y]=1
+                    status=False
             elif int(boatlengths[i])==3:
                 if y+1<=9 and y-1>=0 and board[x,y]==0 and board[x,y+1]==0 and board[x,y-1]==0:
                     board[x,y]=1
                     board[x,y+1]=1
                     board[x,y-1]=1
                     status=False
-            elif int(boatlengths[i])==1 and board[x,y]==0:
-                board[x,y]=1
-                status=False
+            elif int(boatlengths[i])==2:
+                if y+1<=9 and y>=0 and board[x,y]==0 and board[x,y+1]==0:
+                    board[x,y]=1
+                    board[x,y+1]=1
+                    status=False
         if status==False:
             print('Placed')
         else:
@@ -127,6 +151,15 @@ for i in range(len(boatlengths)):
                 else:
                     print('collision, try again')
                     status=True
+            elif int(boatlengths[i])==4:
+                if x+2<=9 and x-1>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x+2,y]==0 and myboard[x-1,y]==0:
+                    myboard[x,y]=1
+                    myboard[x+1,y]=1
+                    myboard[x+2,y]=1
+                    myboard[x-1,y]=1
+                    status=False
+                else:
+                    print('collision, try again')
             elif int(boatlengths[i])==3:
                 if x+1<=9 and x-1>=0 and myboard[x,y]==0 and myboard[x+1,y]==0 and myboard[x-1,y]==0:
                     myboard[x,y]=1
@@ -135,11 +168,13 @@ for i in range(len(boatlengths)):
                     status=False
                 else:
                     print('collision, try again')
-            elif int(boatlengths[i])==1 and myboard[x,y]==0:
-                myboard[x,y]=1
-                status=False
-            else:
-                print('collision, try again')
+            elif int(boatlengths[i])==2:
+                if x+1<=9 and x>=0 and myboard[x,y]==0 and myboard[x+1,y]==0:
+                    myboard[x,y]=1
+                    myboard[x+1,y]=1
+                    status=False
+                else:
+                    print('collision, try again')
         if o==1:
             if int(boatlengths[i])==5:
                 if y+2<=9 and y-2>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y+2]==0 and myboard[x,y-1]==0 and myboard[x,y-2]==0:
@@ -147,6 +182,15 @@ for i in range(len(boatlengths)):
                     myboard[x,y+2]=1
                     myboard[x,y-1]=1
                     myboard[x,y-2]=1
+                    myboard[x,y]=1
+                    status=False
+                else:
+                    print('collision, try again')
+            elif int(boatlengths[i])==4:
+                if y+2<=9 and y-1>=0 and myboard[x,y]==0 and myboard[x,y+1]==0 and myboard[x,y+2]==0 and myboard[x,y-1]==0:
+                    myboard[x,y+1]=1
+                    myboard[x,y+2]=1
+                    myboard[x,y-1]=1
                     myboard[x,y]=1
                     status=False
                 else:
@@ -159,11 +203,13 @@ for i in range(len(boatlengths)):
                     status=False
                 else:
                     print('collision, try again')
-            elif int(boatlengths[i])==1 and myboard[x,y]==0:
-                myboard[x,y]=1
-                status=False
-            else:
-                print('collision, try again')
+            elif int(boatlengths[i])==2:
+                if y+1<=9 and y>=0 and myboard[x,y]==0 and myboard[x,y+1]==0:
+                    myboard[x,y]=1
+                    myboard[x,y+1]=1
+                    status=False
+                else:
+                    print('collision, try again')
         if status==False:
             print('Placed')
 print('Here are your ships...')
@@ -225,18 +271,48 @@ while gamestate:
             elif compguess[x,y]==0:
                 canguesslist.append([x,y])
     if len(goodguesslist)==0:
-        initial=True
-        while initial:
-            xg,yg=randint(0,9),randint(0,9)
-            tes=[xg+1,yg]
-            if tes not in badguesslist:
-                tes=[xg-1,yg]
-                if tes not in badguesslist:
-                    tes=[xg,yg+1]
-                    if tes not in badguesslist:
-                        tes=[xg,yg-1]
-                        if tes not in badguesslist:
-                            initial=False
+#        n = 10
+#        x=np.array([[(i+j)%2 for i in range(n)] for j in range(n)])
+        paritypdf=np.zeros([10,10],int)
+        pdfboard=np.zeros([10,10],int)
+        pdboard=np.zeros([10,10],int)
+        for le in range(len(boatlengths)):
+            for i in range(0,10):
+                for j in range(0,10):
+                    for k in range(boatlengths[le]):
+                        if j+boatlengths[le]<=10:
+                            pdboard[i,j+k]+=1
+                    check=0
+                    for n in range(0,10):
+                        for m in range(0,10):
+                            if pdboard[n,m]==1:
+                                if compguess[n,m]!=0:
+                                    check=1
+                    if check==0:
+                        pdfboard+=pdboard
+                    pdboard=np.zeros([10,10],int)
+        for le in range(len(boatlengths)):
+            for i in range(0,10):
+                for j in range(0,10):
+                    for k in range(boatlengths[le]):
+                        if i+boatlengths[le]<=10:
+                            pdboard[i+k,j]+=1
+                    check=0
+                    for n in range(0,10):
+                        for m in range(0,10):
+                            if pdboard[n,m]==1:
+                                if compguess[n,m]!=0:
+                                    check=1
+                    if check==0:
+                        pdfboard+=pdboard
+                    pdboard=np.zeros([10,10],int)
+        for i in range(0,10):
+            for j in range(0,10):
+                if xa[i,j]==1:
+                    paritypdf[i,j]=pdfboard[i,j]
+        cos=unravel_index(paritypdf.argmax(),paritypdf.shape)
+        xg=int(cos[0])
+        yg=int(cos[1])
     else:
         guessing=True
         count=-1
