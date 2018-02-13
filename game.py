@@ -17,7 +17,7 @@ board=np.zeros([10,10],int)
 myboard=np.zeros([10,10],int)
 compguess=np.zeros([10,10],int)
 shots=np.zeros([10,10],int)
-simlength=1000
+simlength=1
 n = 10
 xa=np.array([[(i+j)%2 for i in range(n)] for j in range(n)])
 
@@ -25,12 +25,12 @@ xa=np.array([[(i+j)%2 for i in range(n)] for j in range(n)])
 boatlengths=[5,4,3,3,2]
 gocount=[None]*simlength
 q=True
-#sim=1
-while q:
-    sim=input('sim? 0 for no, 1 for yes: ')
-    sim=int(sim)
-    if sim==0 or sim==1:
-        q=False
+sim=1
+#while q:
+#    sim=input('sim? 0 for no, 1 for yes: ')
+#    sim=int(sim)
+#    if sim==0 or sim==1:
+#        q=False
 for trialcount in range(0,simlength):
     print(trialcount)
     gocount[trialcount]=0
@@ -49,6 +49,9 @@ for trialcount in range(0,simlength):
     stat3=1
     stat2=1
     reduced=0
+    perimg=[]
+    precheck=0
+    adjlist=0
 
 
 
@@ -367,6 +370,7 @@ for trialcount in range(0,simlength):
         badguesslist=[]  # list of misses
         canguesslist=[]  #list of not yet tried
         sunklist=[]
+        precheck=0
 #        if stat5==0:
 
         setco=0
@@ -443,6 +447,8 @@ for trialcount in range(0,simlength):
                         xg,yg=xi+1,yi
                         guessing=False
                         setco=1
+                        perimg.append([xg,yg])
+                        precheck=1
                         continue
                     ###exists on can guess list guessing =false
                     trial=[xi-1,yi]
@@ -452,6 +458,8 @@ for trialcount in range(0,simlength):
                         xg,yg=xi-1,yi
                         guessing=False
                         setco=1
+                        perimg.append([xg,yg])
+                        precheck=1
                         continue
                     trial=[xi,yi+1]
                     if trial in canguesslist:
@@ -460,6 +468,9 @@ for trialcount in range(0,simlength):
                         xg,yg=xi,yi+1
                         guessing=False
                         setco=1
+                        perimg.append([xg,yg])
+                        precheck=1
+
                         continue
                     trial=[xi,yi-1]
                     if trial in canguesslist:
@@ -468,6 +479,8 @@ for trialcount in range(0,simlength):
                         xg,yg=xi,yi-1
                         guessing=False
                         setco=1
+                        perimg.append([xg,yg])
+
                         continue
                 #check to see if locations around xi,yi are on the good guess list, if they are then guessing=false and carry on - want to get rid of this. need to stop guessing to the sides of a known 2 or more h in a row as that is where most of goes are wasted.
         #if there are no hits or open ships do parity map
@@ -515,9 +528,25 @@ for trialcount in range(0,simlength):
                 for j in range(0,10):
                     if xa[i,j]==1:
                         paritypdf[i,j]=pdfboard[i,j]
-            cos=unravel_index(paritypdf.argmax(),paritypdf.shape)
-            xg=int(cos[0])
-            yg=int(cos[1])
+#            if precheck==1:
+#                for i in range(len(perimg)):
+#                    if int(pdfboard[int(perimg[i][0])][int(perimg[i][0])])>adjlist:
+##                        print(i)
+##                        print(int(perimg[i][0]))
+##                        print(int(perimg[i][1]))
+#                        xg=int(perimg[i][0])
+#                        yg=int(perimg[i][0])
+#                        paritypdf[perimg[i][0],perimg[i][0]]=adjlist
+#                        setco=1
+#                        guessing=False
+##                        print('here')
+
+
+
+            if setco==0:
+                cos=unravel_index(paritypdf.argmax(),paritypdf.shape)
+                xg=int(cos[0])
+                yg=int(cos[1])
         #if there is a single hit, guess around that
 
         # end of guessing logic
@@ -586,4 +615,4 @@ for trialcount in range(0,simlength):
                     print('You win')
             gamestate=False
 print(gocount)
-np.savetxt('gamelengths1.csv', gocount, delimiter=',', fmt='%s')
+np.savetxt('gamelengthsa.csv', gocount, delimiter=',', fmt='%s')
