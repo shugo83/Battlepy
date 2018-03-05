@@ -25,7 +25,7 @@ xa=np.array([[(i+j)%2 for i in range(n)] for j in range(n)])
 boatlengths=[5,4,3,3,2]
 gocount=[None]*simlength
 q=True
-sim=1
+sim=0
 #while q:
 #    sim=input('sim? 0 for no, 1 for yes: ')
 #    sim=int(sim)
@@ -389,7 +389,6 @@ for trialcount in range(0,simlength):
             guessing=True
             count=-1
             while guessing:
-#                guessing=False
 #                ####################################if2 or more values in a line =2 try next one .
                 for t in range(0,9):
                     for r in range(0,9):
@@ -439,7 +438,6 @@ for trialcount in range(0,simlength):
                         zz=randint(0,(len(canguesslist)-1))
                         xi,yi=canguesslist[zz][0],canguesslist[zz][1]
                         break
-                        print('random guess')
                     trial=[xi+1,yi]
                     if trial in canguesslist:
                         if sim==0:
@@ -528,21 +526,6 @@ for trialcount in range(0,simlength):
                 for j in range(0,10):
                     if xa[i,j]==1:
                         paritypdf[i,j]=pdfboard[i,j]
-#            if precheck==1:
-#                for i in range(len(perimg)):
-#                    if int(pdfboard[int(perimg[i][0])][int(perimg[i][0])])>adjlist:
-##                        print(i)
-##                        print(int(perimg[i][0]))
-##                        print(int(perimg[i][1]))
-#                        xg=int(perimg[i][0])
-#                        yg=int(perimg[i][0])
-#                        paritypdf[perimg[i][0],perimg[i][0]]=adjlist
-#                        setco=1
-#                        guessing=False
-##                        print('here')
-
-
-
             if setco==0:
                 cos=unravel_index(paritypdf.argmax(),paritypdf.shape)
                 xg=int(cos[0])
