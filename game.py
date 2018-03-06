@@ -25,12 +25,15 @@ xa=np.array([[(i+j)%2 for i in range(n)] for j in range(n)])
 boatlengths=[5,4,3,3,2]
 gocount=[None]*simlength
 q=True
-sim=0
-#while q:
-#    sim=input('sim? 0 for no, 1 for yes: ')
-#    sim=int(sim)
-#    if sim==0 or sim==1:
-#        q=False
+#sim=0
+while q:
+    sim=input('sim? 0 for no, 1 for yes: ')
+    sim=int(sim)
+    if sim==0 or sim==1:
+        q=False
+if sim==1:
+    simlength=input('how many iterations to run?: ')
+    simlength=int(sim)
 for trialcount in range(0,simlength):
     print(trialcount)
     gocount[trialcount]=0
