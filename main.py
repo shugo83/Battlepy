@@ -41,8 +41,13 @@ def comp_setup():
     badguesslist = []  # list of misses
     canguesslist = []  # list of not yet tried
     sunklist = []
+    paritypdf = np.zeros([10, 10], int)
+    pdfboard = np.zeros([10, 10], int)
+    pdboard = np.zeros([10, 10], int)
+    xg = []
+    yg = []
 #    precheck = 0
-    return goodguesslist, badguesslist, canguesslist, sunklist
+    return goodguesslist, badguesslist, canguesslist, sunklist, paritypdf, pdfboard, pdboard, xg, yg
 
 
 def ask_if_sim():
@@ -502,9 +507,17 @@ def game():
     global badguesslist
     global canguesslist
     global sunklist
+    global xg
+    global yg
+    global paritypdf
+    global pdfboard
+    global pdboard
+    global gocount
+
 
     if sim == 0:
-        print('/n Welcome, enter coodinates for shots in the format y,x')
+        print('')
+        print('Welcome, enter coodinates for shots in the format y,x')
         print('hits are shown by 2, and misses by 1')
     else:
         myboard = board
@@ -518,8 +531,15 @@ def game():
         print('Enemy ships remaining =', remaining)
         create_lists()
         guessing = True
+        setco = 0
+        count = -1
 
         while guessing:
+            # if point is on board, check to see if there are 2 consecutive
+            # hits and set next point equal to coordinates if so
+
+            # TODO add point to list of predicted hits, and then choose most
+            # likely with pdf
             for t in range(0, 9):
                 for r in range(0, 9):
                     if t + 2 <= 9:
@@ -528,46 +548,179 @@ def game():
                             if trial in canguesslist:
                                 xg, yg = t + 2, r
                                 guessing = False
-                                setco=1
+                                setco = 1
                                 continue
                     if t - 2 >= 0:
                         if compguess[t, r] == 2 and compguess[t - 1, r] == 2:
-                            trial=[t-2,r]
+                            trial = [t - 2, r]
                             if trial in canguesslist:
-                                xg,yg=t-2,r
-                                guessing=False
-                                setco=1
+                                xg, yg = t - 2, r
+                                guessing = False
+                                setco = 1
                                 continue
-                    if r+2<=9:
-                        if compguess[t,r]==2 and compguess[t,r+1]==2:
-                            trial=[t,r+2]
+                    if r + 2 <= 9:
+                        if compguess[t, r] == 2 and compguess[t, r + 1] == 2:
+                            trial = [t, r + 2]
                             if trial in canguesslist:
-                                xg,yg=t,r+2
-                                guessing=False
-                                setco=1
+                                xg, yg = t, r + 2
+                                guessing = False
+                                setco = 1
                                 continue
-                    if r-2<=9:
-                        if compguess[t,r]==2 and compguess[t,r-1]==2:
-                            trial=[t,r-2]
+                    if r - 2 <= 9:
+                        if compguess[t, r] == 2 and compguess[t, r - 1] == 2:
+                            trial = [t, r - 2]
                             if trial in canguesslist:
-                                xg,yg=t,r-2
-                                guessing=False
-                                setco=1
+                                xg, yg = t, r - 2
+                                guessing = False
+                                setco = 1
                                 continue
+            if setco == 0:
+                # i dont know what this does
+                    count=count+1
+                    ###this fails sometimes without try below
+                    try:
+                        xi,yi=goodguesslist[count][0],goodguesslist[count][1]
+                    except IndexError:
+                        zz=randint(0,(len(canguesslist)-1))
+                        xi,yi=canguesslist[zz][0],canguesslist[zz][1]
+                        break
+                    trial=[xi+1,yi]
+                    if trial in canguesslist:
+                        if sim==0:
+                            print('thinking...')
+                        xg,yg=xi+1,yi
+                        guessing=False
+                        setco=1
+                        perimg.append([xg,yg])
+                        precheck=1
+                        continue
+                    ###exists on can guess list guessing =false
+                    trial=[xi-1,yi]
+                    if trial in canguesslist:
+                        if sim==0:
+                            print('thinking...')
+                        xg,yg=xi-1,yi
+                        guessing=False
+                        setco=1
+                        perimg.append([xg,yg])
+                        precheck=1
+                        continue
+                    trial=[xi,yi+1]
+                    if trial in canguesslist:
+                        if sim==0:
+                            print('thinking...')
+                        xg,yg=xi,yi+1
+                        guessing=False
+                        setco=1
+                        perimg.append([xg,yg])
+                        precheck=1
+
+                        continue
+                    trial=[xi,yi-1]
+                    if trial in canguesslist:
+                        if sim==0:
+                            print('thinking...')
+                        xg,yg=xi,yi-1
+                        guessing=False
+                        setco=1
+                        perimg.append([xg,yg])
+
+                        continue
+                #check to see if locations around xi,yi are on the good guess list, if they are then guessing=false and carry on - want to get rid of this. need to stop guessing to the sides of a known 2 or more h in a row as that is where most of goes are wasted.
+        #if there are no hits or open ships do parity map
 
 
+            if setco == 0:
+
+#                paritypdf = np.zeros([10, 10], int)
+#                pdfboard = np.zeros([10, 10], int)
+#                pdboard = np.zeros([10, 10], int)
+
+                # for each boat go throuhg all possible locations and append to pdf
+                # if it fits
+                for le in range(len(boatlengths)):
+                    for i in range(0, 10):
+                        for j in range(0, 10):
+                            for k in range(boatlengths[le]):
+                                if j + boatlengths[le] <= 10:
+                                    pdboard[i, j + k] += 1
+                            check = 0
+                            for n in range(0, 10):
+                                for m in range(0, 10):
+                                    if pdboard[n, m] == 1:
+                                        if compguess[n, m] != 0:
+                                            check = 1
+                            if check == 0:
+                                pdfboard += pdboard
+                            pdboard = np.zeros([10, 10], int)
+                for le in range(len(boatlengths)):
+                    for i in range(0, 10):
+                        for j in range(0, 10):
+                            for k in range(boatlengths[le]):
+                                if i+boatlengths[le] <= 10:
+                                    pdboard[i + k, j] += 1
+                            check = 0
+                            for n in range(0, 10):
+                                for m in range(0, 10):
+                                    if pdboard[n, m] == 1:
+                                        if compguess[n, m] != 0:
+                                            check = 1
+                            if check == 0:
+                                pdfboard += pdboard
+                            pdboard = np.zeros([10, 10], int)
+    #            for i in range(0, 10):
+    #                for j in range(0, 10):
+    #                    if xa[i, j] == 1:
+    #                        paritypdf[i, j] = pdfboard[i, j]
+                # vectorised form should be faster
+                paritypdf = xa * pdfboard
+
+                cos = unravel_index(paritypdf.argmax(), paritypdf.shape)
+                xg = int(cos[0])
+                yg = int(cos[1])
+                guessing = False
 
 
-        gamestate = False
+        if sim == 0:
+            print('Computer guess...', xg, ',', yg)
+
+#        gocount[trialcount] += 1
+        if myboard[xg, yg] == 1:
+            if sim == 0:
+                print('Your ship was hit')
+            myboard[xg, yg] = 0
+            compguess[xg, yg] = 2
+        else:
+            if sim == 0:
+                print('Your ships are safe')
+            compguess[xg, yg] = 1
+#        print('     0 1 2 3 4 5 6 7 8 9')
+#        print('    ---------------------')
+#        for i in range(10):
+#            print(i,'|', compguess[i])
+        myremaining = int(np.sum(myboard))
+        if sim == 0:
+            print('You have ', myremaining, ' ships remaining')
+        if sim == 1:
+            remaining = myremaining
+        if myremaining == 0 or remaining == 0:
+            if sim == 0:
+                if myremaining == 0:
+                    print('You lose')
+                elif remaining == 0:
+                    print('You win')
+                gamestate = False
 
 
 board, myboard, compguess, shots, xa, boatlengths, newboats = setup()
-goodguesslist, badguesslist, canguesslist, sunklist = comp_setup()
+goodguesslist, badguesslist, canguesslist, sunklist, paritypdf, pdfboard, pdboard, xg, yg = comp_setup()
 sim = ask_if_sim()
 if sim == 1:
     simlength = ask_iter_count()
 else:
     myboard = user_place()
+    simlength = 1
+gocount = [None]*simlength
 board, newboats = random_place()
 game()
 sys.exit()
