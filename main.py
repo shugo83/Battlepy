@@ -699,6 +699,8 @@ def game():
             else:
                 gamestate = False
     return goc
+
+
 board, myboard, compguess, shots, xa, boatlengths, newboats = setup()
 (goodguesslist, badguesslist, canguesslist, sunklist, paritypdf,
  pdfboard, pdboard, xg, yg) = comp_setup()
@@ -709,6 +711,7 @@ if sim == 1:
     simlength = ask_iter_count()
     gocount = []
     gocount = [None]*simlength
+#    div = int(simlength / 25)
     tstart = time.time()
     for i in range(simlength):
         board, myboard, compguess, shots, xa, boatlengths, newboats = setup()
@@ -719,10 +722,20 @@ if sim == 1:
         goes = game()
         gocount[i] = goes
 
+        sys.stdout.write('\r')
+        sys.stdout.write(
+                '|%-25s| %d%%' % ('█'* int(25*i/simlength), 100*i/simlength))
+        sys.stdout.flush()
+
     tend = time.time()
+    sys.stdout.write('\r')
     average = sum(gocount) / float(simlength)
     time_per_game = (tend - tstart) / simlength
-    print('Average of ' + str(round(average, 2)) + ' @ ' + str(round(time_per_game, 5)) + 's per game')
+    print('Average of ' +
+          str(round(average, 2)) +
+          ' @ ' +
+          str(round(time_per_game, 5)) +
+          's per game')
 
 
 else:
