@@ -725,6 +725,7 @@ if sim == 1:
         sys.stdout.write('\r')
         sys.stdout.write(
                 '|%-25s| %d%%' % ('█'* int(25*i/simlength), 100*i/simlength))
+        sys.stdout.write('    %d out of %d' % (i, simlength))
         sys.stdout.flush()
 
     tend = time.time()
@@ -734,8 +735,7 @@ if sim == 1:
     print('Average of ' +
           str(round(average, 2)) +
           ' @ ' +
-          str(round(time_per_game, 5)) +
-          's per game')
+          str(round(time_per_game, 5)) + 's per game')
 
 
 else:
