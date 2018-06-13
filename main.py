@@ -630,7 +630,6 @@ def game():
 
 
             if setco == 0:
-#                print('parity method')
                 for le in range(len(boatlengths)):
                     for i in range(0, 10):
                         for j in range(0, 10):
@@ -672,7 +671,6 @@ def game():
         if sim == 0:
             print('Computer guess...', xg, ',', yg)
 
-#        gocount[trialcount] += 1
         if myboard[xg, yg] == 1:
             if sim == 0:
                 print('Your ship was hit')
@@ -729,7 +727,7 @@ if sim == 1:
         sys.stdout.flush()
 
     tend = time.time()
-    sys.stdout.write('\r')
+    print()
     average = sum(gocount) / float(simlength)
     time_per_game = (tend - tstart) / simlength
     print('Average of ' +
@@ -744,3 +742,6 @@ else:
     gocount = [None]*simlength
     board, newboats = random_place()
     game()
+
+print('Press enter to exit')
+input()
