@@ -4,6 +4,7 @@ import time
 import sys
 from numpy import unravel_index
 import logging
+import copy
 
 format_string = '%(levelname)8s:\t%(message)s'
 logging.basicConfig(format=format_string, level=logging.INFO)
@@ -505,6 +506,8 @@ def game():
     global pdboard
     global gocount
     global goes
+    global potential_guess
+    global coord_set
 
     goc = 0  # go counter
 
@@ -572,10 +575,12 @@ def game():
                                 guessing = False
                                 setco = 1
                                 continue
+
             if setco == 0:
                 # if point is on good guess list of hits, check to see if
                 # adjacent points can be guessed
-                while setco == 0 and count < len(goodguesslist):
+                potential_guess = []
+                while count < len(goodguesslist):
                     count = count + 1
 #                    print(count)
                     # this fails sometimes without try below
@@ -592,8 +597,8 @@ def game():
                         xg, yg = xi + 1, yi
                         guessing = False
                         setco = 1
-#                        perimg.append([xg,yg])
-                        precheck = 1
+                        potential_guess.append([xg,yg])
+#                        precheck = 1
 
                     trial = [xi - 1, yi]
                     if trial in canguesslist:
@@ -602,8 +607,8 @@ def game():
                         xg, yg = xi - 1, yi
                         guessing = False
                         setco = 1
-#                        perimg.append([xg,yg])
-                        precheck = 1
+                        potential_guess.append([xg,yg])
+#                        precheck = 1
 
                     trial = [xi, yi + 1]
                     if trial in canguesslist:
@@ -612,8 +617,8 @@ def game():
                         xg, yg = xi, yi + 1
                         guessing = False
                         setco = 1
-#                        perimg.append([xg,yg])
-                        precheck = 1
+                        potential_guess.append([xg,yg])
+#                        precheck = 1
 
                     trial = [xi, yi - 1]
                     if trial in canguesslist:
@@ -622,7 +627,17 @@ def game():
                         xg, yg = xi, yi - 1
                         guessing = False
                         setco = 1
-#                        perimg.append([xg,yg])
+                        potential_guess.append([xg,yg])
+
+                if len(potential_guess) > 1:
+                    multiple_loc = True
+#                    print(multiple_loc)
+                    setco = 0
+#                elif len(potential_guess) == 1:
+#                    print(potential_guess)
+
+
+
 
 
                 #check to see if locations around xi,yi are on the good guess list, if they are then guessing=false and carry on - want to get rid of this. need to stop guessing to the sides of a known 2 or more h in a row as that is where most of goes are wasted.
@@ -630,6 +645,7 @@ def game():
 
 
             if setco == 0:
+                pdfboard = np.zeros([10, 10], int)
                 for le in range(len(boatlengths)):
                     for i in range(0, 10):
                         for j in range(0, 10):
@@ -662,10 +678,33 @@ def game():
                             pdboard = np.zeros([10, 10], int)
                 paritypdf = xa * pdfboard
 
-                cos = unravel_index(paritypdf.argmax(), paritypdf.shape)
-                xg = int(cos[0])
-                yg = int(cos[1])
-                guessing = False
+                if multiple_loc:
+                    scored_method = False
+#                    print('1')
+                    old_score = 0
+                    for coord_set in potential_guess:
+#                        print('h')
+                        new_score = pdfboard[coord_set[0],coord_set[1]]
+#                        print(new_score)
+                        if new_score > old_score:
+#                            print('biggre')
+                            old_score = copy.copy(new_score)
+                            c0, c1 = coord_set[0], coord_set[1]
+                            scored_method = True
+                    if scored_method:
+                        xg, yg = c0, c1
+                        guessing = False
+                    else:
+                        cos = unravel_index(paritypdf.argmax(), paritypdf.shape)
+                        xg = int(cos[0])
+                        yg = int(cos[1])
+                        guessing = False
+
+                else:
+                    cos = unravel_index(paritypdf.argmax(), paritypdf.shape)
+                    xg = int(cos[0])
+                    yg = int(cos[1])
+                    guessing = False
 
 
         if sim == 0:
@@ -702,6 +741,7 @@ def game():
 board, myboard, compguess, shots, xa, boatlengths, newboats = setup()
 (goodguesslist, badguesslist, canguesslist, sunklist, paritypdf,
  pdfboard, pdboard, xg, yg) = comp_setup()
+# TODO multiple iteration problems - these setups should not be required for sim = 1 but seem to be
 sim = ask_if_sim()
 gocount = []
 
