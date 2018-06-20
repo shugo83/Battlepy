@@ -592,38 +592,27 @@ def game():
                         xi, yi = canguesslist[zz][0], canguesslist[zz][1]
                     trial = [xi + 1, yi]
                     if trial in canguesslist:
-                        if sim == 0:
-                            print('thinking...')
                         xg, yg = xi + 1, yi
                         guessing = False
                         setco = 1
                         potential_guess.append([xg,yg])
-#                        precheck = 1
 
                     trial = [xi - 1, yi]
                     if trial in canguesslist:
-                        if sim == 0:
-                            print('thinking...')
                         xg, yg = xi - 1, yi
                         guessing = False
                         setco = 1
                         potential_guess.append([xg,yg])
-#                        precheck = 1
 
                     trial = [xi, yi + 1]
                     if trial in canguesslist:
-                        if sim == 0:
-                            print('thinking...')
                         xg, yg = xi, yi + 1
                         guessing = False
                         setco = 1
                         potential_guess.append([xg,yg])
-#                        precheck = 1
 
                     trial = [xi, yi - 1]
                     if trial in canguesslist:
-                        if sim == 0:
-                            print('thinking...')
                         xg, yg = xi, yi - 1
                         guessing = False
                         setco = 1
